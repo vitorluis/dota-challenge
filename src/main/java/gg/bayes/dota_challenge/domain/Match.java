@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,8 +16,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,10 +38,10 @@ public final class Match {
     @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "match", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "match")
     private Set<CombatLogEntry> combatLogEntries = new HashSet<>();
 
-    public static Match create(Set<String> entries) {
+    public static Match create(List<String> entries) {
         var match = new Match();
 
         // As we have timestamp for ordering the events of the match, we can process the data in parallel to help
@@ -46,10 +49,16 @@ public final class Match {
         // In this case I'm using parallel stream just to "show off". Parallel stream uses thread from the common
         // ForkJoinPool which is shared between the whole application. Ideally the parallel stream should be used
         // only after a benchmark proving that is better than serial stream and if it just makes pure computations,
-        // because if is there IO involved, it will make the thread wait blocking it to go back to the thread pool
-        entries.parallelStream()
-            .map(entry -> CombatLogEntry.create(entry, match))
-            .forEach(match::addCombatEntry);
+        // because if is there IO involved (whether disk or network), it will make the thread wait, blocking it to go
+        // back to the thread pool
+        entries.parallelStream().map(entry -> {
+            try {
+                return CombatLogEntry.create(entry, match);
+            } catch (UnsupportedEventException e) {
+                System.out.println(e.getMessage());
+            }
+            return null;
+        }).forEachOrdered(match::addCombatEntry);
 
         return match;
     }

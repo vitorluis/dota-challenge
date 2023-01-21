@@ -25,7 +25,7 @@ import java.time.temporal.ChronoField;
 
 @Entity
 @Table(name = "dota_combat_log")
-public class CombatLogEntry {
+public final class CombatLogEntry {
 
     @Id
     @Column(name = "id")
@@ -163,7 +163,24 @@ public class CombatLogEntry {
     private static long parseTimestamp(String timestamp) {
         // Java does not provide any out-of-the-box to parse [00:09:02.522] as a duration.
         // So one way of parsing it correctly and getting milliseconds is using LocalTime.
-        return LocalTime.parse(timestamp).get(ChronoField.MILLI_OF_DAY);
+        var cleanedTimestamp = timestamp.replace("[", "").replace("]", "");
+        return LocalTime.parse(cleanedTimestamp).get(ChronoField.MILLI_OF_DAY);
+    }
+
+    @Override
+    public String toString() {
+        return "CombatLogEntry{" +
+               "id=" + id +
+               ", match=" + match +
+               ", timestamp=" + timestamp +
+               ", type=" + type +
+               ", actor='" + actor + '\'' +
+               ", target='" + target + '\'' +
+               ", ability='" + ability + '\'' +
+               ", abilityLevel=" + abilityLevel +
+               ", item='" + item + '\'' +
+               ", damage=" + damage +
+               '}';
     }
 
     public enum Type {

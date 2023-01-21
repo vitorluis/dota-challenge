@@ -1,9 +1,5 @@
 package gg.bayes.dota_challenge.adapter.handler.rest.dto;
 
-import lombok.Value;
-
-@Value
-public class HeroKills {
-    String hero;
-    Integer kills;
+// Using records for DTO classes (Records are available since JDK 14)
+public record HeroKills(String hero, int kills) {
 }
