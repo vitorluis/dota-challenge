@@ -2,6 +2,7 @@ package gg.bayes.dota_challenge.application;
 
 import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
+import gg.bayes.dota_challenge.adapter.dto.HeroSpells;
 import gg.bayes.dota_challenge.adapter.repository.CombatLogEntryRepository;
 import gg.bayes.dota_challenge.adapter.repository.MatchRepository;
 import gg.bayes.dota_challenge.domain.Match;
@@ -25,6 +26,10 @@ public class QueryMatchService {
 
     public List<HeroItem> getHeroItems(long matchId, String hero) {
         return combatLogEntryRepository.findAllHeroItems(getMatchById(matchId).getId(), hero);
+    }
+
+    public List<HeroSpells> getHeroSpell(long matchId, String hero) {
+        return combatLogEntryRepository.findAllHeroSpells(getMatchById(matchId).getId(), hero);
     }
 
     private Match getMatchById(long matchId) {

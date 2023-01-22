@@ -2,6 +2,7 @@ package gg.bayes.dota_challenge.adapter.handler.rest;
 
 import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
+import gg.bayes.dota_challenge.adapter.dto.HeroSpells;
 import gg.bayes.dota_challenge.adapter.dto.MatchResponse;
 import gg.bayes.dota_challenge.application.CreateMatchService;
 import gg.bayes.dota_challenge.application.QueryMatchService;
@@ -43,5 +44,11 @@ public class MatchHandler {
     @ResponseBody
     public List<HeroItem> getHeroItems(@PathVariable("matchId") Long id, @PathVariable("heroName") String heroName) {
         return queryMatchService.getHeroItems(id, heroName);
+    }
+
+    @GetMapping(value = "/{matchId}/{heroName}/spells")
+    @ResponseBody
+    public List<HeroSpells> getHeroSpells(@PathVariable("matchId") Long id, @PathVariable("heroName") String heroName) {
+        return queryMatchService.getHeroSpell(id, heroName);
     }
 }
