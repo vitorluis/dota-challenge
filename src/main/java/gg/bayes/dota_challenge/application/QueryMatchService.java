@@ -1,5 +1,6 @@
 package gg.bayes.dota_challenge.application;
 
+import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
 import gg.bayes.dota_challenge.adapter.repository.CombatLogEntryRepository;
 import gg.bayes.dota_challenge.adapter.repository.MatchRepository;
@@ -20,6 +21,10 @@ public class QueryMatchService {
     public List<HeroKills> getHeroKillsByMatchId(long matchId) {
         // To do some proper error handling, let's double-check if the match really exists
         return combatLogEntryRepository.findAllKillsByMatchId(getMatchById(matchId).getId());
+    }
+
+    public List<HeroItem> getHeroItems(long matchId, String hero) {
+        return combatLogEntryRepository.findAllHeroItems(getMatchById(matchId).getId(), hero);
     }
 
     private Match getMatchById(long matchId) {

@@ -42,7 +42,7 @@ public class CombatLogEntry {
 
     @NotNull
     @Column(name = "entry_timestamp")
-    private Long timestamp;
+    private long timestamp;
 
     @NotNull
     @Column(name = "entry_type")

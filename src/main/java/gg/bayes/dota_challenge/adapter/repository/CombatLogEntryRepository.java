@@ -1,5 +1,6 @@
 package gg.bayes.dota_challenge.adapter.repository;
 
+import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
 import gg.bayes.dota_challenge.domain.CombatLogEntry;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,8 +15,16 @@ public interface CombatLogEntryRepository extends JpaRepository<CombatLogEntry, 
     @Query("""
             SELECT new gg.bayes.dota_challenge.adapter.dto.HeroKills(cle.actor, count(cle))
             FROM CombatLogEntry cle
-            where cle.type = 'HERO_KILLED' and cle.match.id = :matchId
-            group by cle.actor
+            WHERE cle.type = 'HERO_KILLED' AND cle.match.id = :matchId
+            GROUP BY cle.actor
         """)
-    List<HeroKills> findAllKillsByMatchId(Long matchId);
+    List<HeroKills> findAllKillsByMatchId(long matchId);
+
+    @Query("""
+        SELECT new gg.bayes.dota_challenge.adapter.dto.HeroItem(cle.item, cle.timestamp)
+        FROM CombatLogEntry cle
+        WHERE cle.match.id = :matchId AND cle.actor = :hero and cle.type = 'ITEM_PURCHASED'
+        ORDER BY cle.timestamp
+        """)
+    List<HeroItem> findAllHeroItems(long matchId, String hero);
 }
