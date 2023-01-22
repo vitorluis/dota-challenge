@@ -40,14 +40,15 @@ public class CreateMatchService {
                 match.getCombatLogEntries()
                     .parallelStream()
                     .peek(combatLogEntryRepository::save)
-                    .forEachOrdered(System.out::println);
+                    .forEachOrdered(cle -> {
+                    });
 
                 return match;
             } catch (Exception e) {
                 log.error("Error while saving combat entries: {}", e.getMessage());
                 matchRepository.delete(match);
 
-                return null;
+                return match;
             }
         });
     }

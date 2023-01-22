@@ -1,0 +1,65 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+final jacocoExcludes = [
+        "gg/bayes/dota_challenge/DotaChallengeApplication.class",
+]
+
+jacocoTestReport {
+    executionData(file("${project.buildDir}/jacoco/test.exec"))
+    reports {
+        xml.enabled true
+        html.enabled true
+        html.destination file("${project.buildDir}/reports/jacoco")
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+}
+
+task printJacocoTestCoverageVerificationPath {
+    doLast {
+        final reportUrl = file("${jacocoTestReport.reports.html.destination}/index.html").toURI().toURL()
+        final projectName = "\":${project.name}\""
+        if (jacocoTestCoverageVerification.state.skipped) {
+            logger.warn "\nNOTE: Test coverage verification for project $projectName is SKIPPED!"
+        } else if (jacocoTestCoverageVerification.state.failure != null) {
+            logger.error "\nTest coverage verification for project $projectName failure! See the report:\n${reportUrl}\n"
+        } else {
+            logger.lifecycle "Test coverage verification for project $projectName success. See the report:\n${reportUrl}"
+        }
+    }
+}
+
+jacocoTestCoverageVerification {
+    finalizedBy printJacocoTestCoverageVerificationPath
+
+    violationRules {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+        rule {
+            element = 'BUNDLE'
+            limit {
+                counter = 'INSTRUCTION'
+                minimum = 0.0
+                value = 'COVEREDRATIO'
+
+            }
+        }
+    }
+}
+
+task testCoverage(type: Task) {
+    description 'Verify test coverage and create report'
+    dependsOn test, jacocoTestReport, jacocoTestCoverageVerification
+}
+
+jacocoTestCoverageVerification.mustRunAfter jacocoTestReport
+
+test.finalizedBy testCoverage

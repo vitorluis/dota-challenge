@@ -75,7 +75,11 @@ public final class CombatLogEntry {
         // Damage: [00:25:05.520] npc_dota_hero_pangolier hits npc_dota_hero_death_prophet with pangolier_gyroshell
         // for 148 damage (1380->1232)
 
-        // Based on the log entry, parse the correct data
+        // Here I'm evaluating the data of the event splitting the string and accessing it via the array index
+        // It might not be elegant as it would be with some Regex, but with regex we would need to evaluate the whole
+        // string, not only now to decide what type of event it is, but also to extract the needed value. Each
+        // evaluation operation could be O(n). As the event is structured, and we know where the data is, I'm
+        // accessing directly via the array index, making the operation O(1)
         var fields = entry.toLowerCase().split(" ");
         if (fields[2].equals("buys")) {
             return createItemPurchaseEntry(fields, match);
@@ -167,22 +171,6 @@ public final class CombatLogEntry {
         // So one way of parsing it correctly and getting milliseconds is using LocalTime.
         var cleanedTimestamp = timestamp.replace("[", "").replace("]", "");
         return LocalTime.parse(cleanedTimestamp).getLong(ChronoField.NANO_OF_DAY);
-    }
-
-    @Override
-    public String toString() {
-        return "CombatLogEntry{" +
-               "id=" + id +
-               ", match=" + match +
-               ", timestamp=" + timestamp +
-               ", type=" + type +
-               ", actor='" + actor + '\'' +
-               ", target='" + target + '\'' +
-               ", ability='" + ability + '\'' +
-               ", abilityLevel=" + abilityLevel +
-               ", item='" + item + '\'' +
-               ", damage=" + damage +
-               '}';
     }
 
     public enum Type {
