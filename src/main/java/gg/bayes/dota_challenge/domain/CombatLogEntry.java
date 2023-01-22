@@ -25,7 +25,7 @@ import java.time.temporal.ChronoField;
 
 @Entity
 @Table(name = "dota_combat_log")
-public final class CombatLogEntry {
+public class CombatLogEntry {
 
     @Id
     @Column(name = "id")
@@ -76,12 +76,12 @@ public final class CombatLogEntry {
         // for 148 damage (1380->1232)
 
         // Based on the log entry, parse the correct data
-        var fields = entry.split(" ");
+        var fields = entry.toLowerCase().split(" ");
         if (fields[2].equals("buys")) {
             return createItemPurchaseEntry(fields, match);
         }
 
-        if (fields[2].equals("is") && fields[3].equals("killed")) {
+        if (fields[3].equals("killed") && fields[1].contains("hero") && fields[5].contains("hero")) {
             return createKillEntry(fields, match);
         }
 
@@ -113,6 +113,8 @@ public final class CombatLogEntry {
 
     private static CombatLogEntry createKillEntry(String[] fields, Match match) {
         // Kill: [00:11:17.489] npc_dota_hero_snapfire is killed by npc_dota_hero_mars
+
+        // We just create
         return new CombatLogEntry(
             null,
             match,

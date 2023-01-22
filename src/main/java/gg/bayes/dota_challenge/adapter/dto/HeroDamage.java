@@ -1,7 +1,6 @@
-package gg.bayes.dota_challenge.adapter.handler.rest.dto;
+package gg.bayes.dota_challenge.adapter.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
 
 // Using records for DTO classes (Records are available since JDK 14)
 public record HeroDamage(
