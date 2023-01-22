@@ -6,7 +6,6 @@ import gg.bayes.dota_challenge.adapter.dto.HeroKills;
 import gg.bayes.dota_challenge.adapter.dto.HeroSpells;
 import gg.bayes.dota_challenge.adapter.repository.CombatLogEntryRepository;
 import gg.bayes.dota_challenge.adapter.repository.MatchRepository;
-import gg.bayes.dota_challenge.domain.Match;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,42 +21,31 @@ public class QueryMatchService {
 
     public List<HeroKills> getHeroKillsByMatchId(long matchId) {
         // To do some proper error handling, let's double-check if the match really exists
-        return combatLogEntryRepository.findAllKillsByMatchId(getMatchById(matchId).getId());
+        checkMatchExists(matchId);
+        return combatLogEntryRepository.findAllKillsByMatchId(matchId);
     }
 
     public List<HeroItem> getHeroItems(long matchId, String hero) {
-        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
-        var items = combatLogEntryRepository.findAllHeroItems(getMatchById(matchId).getId(), hero);
-        if (items.isEmpty()) {
-            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
-        }
-
-        return items;
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
+        checkMatchExists(matchId);
+        return combatLogEntryRepository.findAllHeroItems(matchId, hero);
     }
 
-    public List<HeroSpells> getHeroSpell(long matchId, String hero) {
-        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
-        var spells = combatLogEntryRepository.findAllHeroSpells(getMatchById(matchId).getId(), hero);
-        if (spells.isEmpty()) {
-            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
-        }
-
-        return spells;
+    public List<HeroSpells> getHeroSpells(long matchId, String hero) {
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
+        checkMatchExists(matchId);
+        return combatLogEntryRepository.findAllHeroSpells(matchId, hero);
     }
 
     public List<HeroDamage> getHeroDamage(long matchId, String hero) {
-        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
-        var damages = combatLogEntryRepository.findAllHeroTakenDamage(getMatchById(matchId).getId(), hero);
-        if (damages.isEmpty()) {
-            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
-        }
-
-        return damages;
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
+        checkMatchExists(matchId);
+        return combatLogEntryRepository.findAllHeroTakenDamage(matchId, hero);
     }
 
-    private Match getMatchById(long matchId) {
-        return matchRepository.findById(matchId).orElseThrow(() -> {
+    private void checkMatchExists(long matchId) {
+        if (!matchRepository.existsById(matchId)) {
             throw new MatchNotFoundException("Match with ID " + matchId + " not found.");
-        });
+        }
     }
 }

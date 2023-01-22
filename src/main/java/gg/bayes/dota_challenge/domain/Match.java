@@ -21,7 +21,7 @@ import java.util.Set;
 
 @Slf4j
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor // Not making it private just to help on tests
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity

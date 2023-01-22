@@ -50,7 +50,7 @@ public class MatchHandler {
     @GetMapping(value = "/{matchId}/{heroName}/spells")
     @ResponseBody
     public List<HeroSpells> getHeroSpells(@PathVariable("matchId") Long id, @PathVariable("heroName") String heroName) {
-        return queryMatchService.getHeroSpell(id, heroName);
+        return queryMatchService.getHeroSpells(id, heroName);
     }
 
     @GetMapping(value = "/{matchId}/{heroName}/damage")
