@@ -77,8 +77,8 @@ public final class CombatLogEntry {
 
         // Here I'm evaluating the data of the event splitting the string and accessing it via the array index
         // It might not be elegant as it would be with some Regex, but with regex we would need to evaluate the whole
-        // string, not only now to decide what type of event it is, but also to extract the needed value. Each
-        // evaluation operation could be O(n). As the event is structured, and we know where the data is, I'm
+        // string, not only to decide what type of event it is, but also to extract the needed values. Each
+        // evaluation with Regex could be O(n). As the event is structured, and we know where the data is, I'm
         // accessing directly via the array index, making the operation O(1)
         var fields = entry.toLowerCase().split(" ");
         if (fields[2].equals("buys")) {

@@ -41,6 +41,7 @@ public class CreateMatchService {
                     .parallelStream()
                     .peek(combatLogEntryRepository::save)
                     .forEachOrdered(cle -> {
+                        log.debug("Log Entry {} created at timestamp {}", cle.getType(), cle.getTimestamp());
                     });
 
                 return match;

@@ -21,29 +21,29 @@ public class QueryMatchService {
 
     public List<HeroKills> getHeroKillsByMatchId(long matchId) {
         // To do some proper error handling, let's double-check if the match really exists
-        checkMatchExists(matchId);
+        checkIfMatchExists(matchId);
         return combatLogEntryRepository.findAllKillsByMatchId(matchId);
     }
 
     public List<HeroItem> getHeroItems(long matchId, String hero) {
         // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
-        checkMatchExists(matchId);
+        checkIfMatchExists(matchId);
         return combatLogEntryRepository.findAllHeroItems(matchId, hero);
     }
 
     public List<HeroSpells> getHeroSpells(long matchId, String hero) {
         // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
-        checkMatchExists(matchId);
+        checkIfMatchExists(matchId);
         return combatLogEntryRepository.findAllHeroSpells(matchId, hero);
     }
 
     public List<HeroDamage> getHeroDamage(long matchId, String hero) {
         // Let's check also if the hero exists. IF the list is empty, let's throw an exception to client
-        checkMatchExists(matchId);
+        checkIfMatchExists(matchId);
         return combatLogEntryRepository.findAllHeroTakenDamage(matchId, hero);
     }
 
-    private void checkMatchExists(long matchId) {
+    private void checkIfMatchExists(long matchId) {
         if (!matchRepository.existsById(matchId)) {
             throw new MatchNotFoundException("Match with ID " + matchId + " not found.");
         }

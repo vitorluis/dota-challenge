@@ -28,7 +28,6 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
 
-    // Swagger
     // Swagger is actually deprecated, switching to OpenAPI
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
 

@@ -24,11 +24,12 @@ spring:
         persistence:
           query:
             timeout: 10000
-          schema-generation:
-            create-source: metadata
-            scripts:
-              action: create
-              create-target: V3__create_tables.sql
+  # Uncomment this to generate the migrations
+  #          schema-generation:
+  #            create-source: metadata
+  #            scripts:
+  #              action: create
+  #              create-target: V3__create_tables.sql
   datasource:
     url: jdbc:postgresql://bismarck:5432/bayes?ssl=true&sslmode=require
     username: bayes
