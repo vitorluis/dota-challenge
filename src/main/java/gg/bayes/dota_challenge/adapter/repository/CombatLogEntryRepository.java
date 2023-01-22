@@ -1,5 +1,6 @@
 package gg.bayes.dota_challenge.adapter.repository;
 
+import gg.bayes.dota_challenge.adapter.dto.HeroDamage;
 import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
 import gg.bayes.dota_challenge.adapter.dto.HeroSpells;
@@ -36,4 +37,14 @@ public interface CombatLogEntryRepository extends JpaRepository<CombatLogEntry, 
             GROUP BY cle.ability
         """)
     List<HeroSpells> findAllHeroSpells(long matchId, String hero);
+
+    @Query("""
+            SELECT new gg.bayes.dota_challenge.adapter.dto.HeroDamage(cle.target, count(cle), sum(cle.damage))
+            FROM CombatLogEntry cle
+            WHERE cle.type = 'DAMAGE_DONE'
+            AND cle.match.id = :matchId
+            AND cle.actor = :hero
+            GROUP BY cle.target
+        """)
+    List<HeroDamage> findAllHeroTakenDamage(long matchId, String hero);
 }

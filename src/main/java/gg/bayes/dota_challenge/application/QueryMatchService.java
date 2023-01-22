@@ -1,5 +1,6 @@
 package gg.bayes.dota_challenge.application;
 
+import gg.bayes.dota_challenge.adapter.dto.HeroDamage;
 import gg.bayes.dota_challenge.adapter.dto.HeroItem;
 import gg.bayes.dota_challenge.adapter.dto.HeroKills;
 import gg.bayes.dota_challenge.adapter.dto.HeroSpells;
@@ -25,11 +26,33 @@ public class QueryMatchService {
     }
 
     public List<HeroItem> getHeroItems(long matchId, String hero) {
-        return combatLogEntryRepository.findAllHeroItems(getMatchById(matchId).getId(), hero);
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
+        var items = combatLogEntryRepository.findAllHeroItems(getMatchById(matchId).getId(), hero);
+        if (items.isEmpty()) {
+            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
+        }
+
+        return items;
     }
 
     public List<HeroSpells> getHeroSpell(long matchId, String hero) {
-        return combatLogEntryRepository.findAllHeroSpells(getMatchById(matchId).getId(), hero);
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
+        var spells = combatLogEntryRepository.findAllHeroSpells(getMatchById(matchId).getId(), hero);
+        if (spells.isEmpty()) {
+            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
+        }
+
+        return spells;
+    }
+
+    public List<HeroDamage> getHeroDamage(long matchId, String hero) {
+        // Let's check also if the hero exists. IF the list is empty, let's throw an exception to clien
+        var damages = combatLogEntryRepository.findAllHeroTakenDamage(getMatchById(matchId).getId(), hero);
+        if (damages.isEmpty()) {
+            throw new HeroNotFoundException("Hero with name " + hero + " was not found");
+        }
+
+        return damages;
     }
 
     private Match getMatchById(long matchId) {

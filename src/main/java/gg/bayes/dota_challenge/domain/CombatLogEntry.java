@@ -25,7 +25,7 @@ import java.time.temporal.ChronoField;
 
 @Entity
 @Table(name = "dota_combat_log")
-public class CombatLogEntry {
+public final class CombatLogEntry {
 
     @Id
     @Column(name = "id")

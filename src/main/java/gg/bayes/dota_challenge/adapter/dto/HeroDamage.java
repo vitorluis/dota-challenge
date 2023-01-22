@@ -7,9 +7,9 @@ public record HeroDamage(
     String target,
 
     @JsonProperty("damage_instances")
-    int damageInstances,
+    long damageInstances,
 
     @JsonProperty("total_damage")
-    int totalDamage
+    long totalDamage
 ) {
 }
