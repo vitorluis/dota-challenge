@@ -164,7 +164,7 @@ public final class CombatLogEntry {
         // Java does not provide any out-of-the-box to parse [00:09:02.522] as a duration.
         // So one way of parsing it correctly and getting milliseconds is using LocalTime.
         var cleanedTimestamp = timestamp.replace("[", "").replace("]", "");
-        return LocalTime.parse(cleanedTimestamp).get(ChronoField.MILLI_OF_DAY);
+        return LocalTime.parse(cleanedTimestamp).getLong(ChronoField.NANO_OF_DAY);
     }
 
     @Override

@@ -36,8 +36,8 @@ class CreateMatchServiceTest {
 
     private static Stream<Arguments> testFiles() {
         return Stream.of(
-            Arguments.of("classpath:combatlog_1.log.txt", 4237),
-            Arguments.of("classpath:combatlog_2.log.txt", 4407)
+            Arguments.of("classpath:combatlog_1.log.txt", 4236),
+            Arguments.of("classpath:combatlog_2.log.txt", 4406)
         );
     }
 

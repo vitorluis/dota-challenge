@@ -10,7 +10,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Slf4j
@@ -40,7 +39,6 @@ public class CreateMatchService {
             try {
                 match.getCombatLogEntries()
                     .parallelStream()
-                    .filter(Objects::nonNull)
                     .peek(combatLogEntryRepository::save)
                     .forEachOrdered(System.out::println);
 

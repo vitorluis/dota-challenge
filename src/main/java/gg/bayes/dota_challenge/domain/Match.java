@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -51,14 +51,16 @@ public final class Match {
         // only after a benchmark proving that is better than serial stream and if it just makes pure computations,
         // because if is there IO involved (whether disk or network), it will make the thread wait, blocking it to go
         // back to the thread pool
-        entries.parallelStream().map(entry -> {
-            try {
-                return CombatLogEntry.create(entry, match);
-            } catch (UnsupportedEventException e) {
-                System.out.println(e.getMessage());
-            }
-            return null;
-        }).forEachOrdered(match::addCombatEntry);
+        entries.parallelStream()
+            .map(entry -> {
+                try {
+                    return CombatLogEntry.create(entry, match);
+                } catch (UnsupportedEventException e) {
+                    log.warn(e.getMessage());
+                }
+                return null;
+            }).filter(Objects::nonNull)
+            .forEachOrdered(match::addCombatEntry);
 
         return match;
     }
